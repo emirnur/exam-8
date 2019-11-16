@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -18,59 +18,36 @@ class ProductView(DetailView):
     context_object_name = 'product'
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(PermissionRequiredMixin, CreateView):
     model = Product
     template_name = 'product/create.html'
     form_class = ProductForm
+    permission_required = 'webapp.add_product'
+    permission_denied_message = 'Доступ запрещен!'
 
     def get_success_url(self):
         return reverse('webapp:product_detail', kwargs={'pk': self.object.pk})
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(PermissionRequiredMixin, UpdateView):
     model = Product
     template_name = 'product/update.html'
     context_object_name = 'product'
     form_class = ProductForm
+    permission_required = 'webapp.change_product'
+    permission_denied_message = 'Доступ запрещен!'
 
     def get_success_url(self):
         return reverse('webapp:product_detail', kwargs={'pk': self.object.pk})
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(PermissionRequiredMixin, DeleteView):
     model = Product
     template_name = 'product/delete.html'
     success_url = reverse_lazy('webapp:index')
     context_object_name = 'product'
-
-
-# class ReviewListView(ListView):
-#     template_name = 'review/list.html'
-#     model = Review
-#     context_object_name = 'reviews'
-
-
-# class ReviewForProductCreateView(LoginRequiredMixin, CreateView):
-#     model = Product
-#     template_name = 'review/create.html'
-#     form_class = ReviewProductForm
-#
-#     def dispatch(self, request, *args, **kwargs):
-#         self.article = self.get_article()
-#         if self.article.is_archived:
-#             raise Http404
-#         return super().dispatch(request, *args, **kwargs)
-#
-#     def form_valid(self, form):
-#         self.object = self.rev.create(
-#             author=self.request.user,
-#             **form.cleaned_data
-#         )
-#         return redirect('webapp:product_detail', pk=self.article.pk)
-#
-#     def get_article(self):
-#         pr_pk = self.kwargs.get('pk')
-#         return get_object_or_404(Review, pk=review_pk)
+    permission_required = 'webapp.delete_product'
+    permission_denied_message = 'Доступ запрещен!'
 
 
 class ReviewCreateView(LoginRequiredMixin, CreateView):
@@ -86,11 +63,13 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         return redirect('webapp:product_detail', pk=product.pk)
 
 
-class ReviewUpdateView(UpdateView):
+class ReviewUpdateView(PermissionRequiredMixin, UpdateView):
     model = Review
     template_name = 'review/update.html'
     form_class = ReviewForm
     context_object_name = 'review'
+    permission_required = 'webapp.change_review'
+    permission_denied_message = 'Доступ запрещен!'
 
     def test_func(self):
         review = self.get_object()
@@ -101,8 +80,10 @@ class ReviewUpdateView(UpdateView):
         return reverse('webapp:product_detail', kwargs={'pk': self.object.product.pk})
 
 
-class ReviewDeleteView(DeleteView):
+class ReviewDeleteView(PermissionRequiredMixin, DeleteView):
     model = Review
+    permission_required = 'webapp.delete_review'
+    permission_denied_message = 'Доступ запрещен!'
 
     def test_func(self):
         review = self.get_object()

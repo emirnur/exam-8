@@ -25,4 +25,14 @@
             </div>
         </div>
     </div>
+    {% for review in reviews %}
+    <div class="review">
+        <p><b>Author:</b> <a href="{% url 'accounts:detail' review.author.pk %}">{{ review.author }}</a> <b>Email:</b> {{ review.author.email }} <b>Mark:</b> {{ review.get_mark_display }}</p>
+        <div class="pre">{{ review.text }}</div>
+        <p class="review-links">
+            <a href="{% url 'webapp:review_update' review.product.pk %}">Edit</a>
+            <a href="{% url 'webapp:review_delete' review.product.pk %}">Delete</a>
+        </p>
+     </div>
+    {% endfor %}
 {% endblock %}

@@ -42,6 +42,20 @@ class Review(models.Model):
     mark = models.CharField(max_length=20, choices=ORDER_MARK_CHOICES, default=ORDER_MARK_CHOICES[0][0],
                               verbose_name='Оценка')
 
+    def get_rating(self):
+        reviews = self.product.review_product.all()
+        qty = len(reviews)
+        rate = 0
+        for product in reviews:
+            rating = product.rating
+            rate += rating
+        if qty == 0:
+            mark = rate / 1
+        else:
+            mark = rate / qty
+        print(mark)
+        return mark
+
     def __str__(self):
         return "{} / {}".format(self.author, self.product)
 

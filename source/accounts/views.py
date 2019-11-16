@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.views.generic import DetailView, UpdateView
 from django.contrib.auth.models import User
+
+from webapp.models import Review
 from .forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 
 
@@ -49,6 +51,13 @@ class UserDetailView(DetailView):
     model = User
     template_name = 'user_detail.html'
     context_object_name = 'user_obj'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        product = self.object
+        reviews = Review.objects.all().filter(author=product)
+        context['reviews'] = reviews
+        return context
 
 
 class UserPersonalInfoChangeView(UserPassesTestMixin, UpdateView):

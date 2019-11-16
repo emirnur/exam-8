@@ -23,12 +23,12 @@
     <div class="review-list">
         {% for review in product.review_product.all %}
             <div class="review">
-                <p><b>Author:</b> {{ review.author }} <b>Email:</b> {{ review.author.email }} <b>Mark:</b> {{ review.mark.get_category_display }}</p>
+                <p><b>Author:</b> <a href="{% url 'accounts:detail' review.author.pk %}">{{ review.author }}</a> <b>Email:</b> {{ review.author.email }} <b>Mark:</b> {{ review.get_mark_display }}</p>
                 <div class="pre">{{ review.text }}</div>
 
                     <p class="review-links">
-                        <a href="{% url 'webapp:review_update' product.pk %}">Edit</a>
-                        <a href="{% url 'webapp:review_delete' product.pk %}">Delete</a>
+                        <a href="{% url 'webapp:review_update' review.pk %}">Edit</a>
+                        <a href="{% url 'webapp:review_delete' review.pk %}">Delete</a>
                     </p>
             </div>
         {% empty %}
