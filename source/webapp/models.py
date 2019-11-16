@@ -37,7 +37,7 @@ ORDER_MARK_CHOICES = (
 class Review(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL,
                              verbose_name='Пользователь', related_name='author_review')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар', related_name='review_product')
     text = models.TextField(max_length=3000, verbose_name='Текст')
     mark = models.CharField(max_length=20, choices=ORDER_MARK_CHOICES, default=ORDER_MARK_CHOICES[0][0],
                               verbose_name='Оценка')

@@ -17,5 +17,22 @@
         <p><b>Описание:</b> {{ product.description }}</p>
         <p><a href="{% url 'webapp:product_update' product.pk %}" class="btn btn-primary">Изменить</a></p>
         <p><a href="{% url 'webapp:product_delete' product.pk %}" class="btn btn-danger">Удалить</a></p>
+        <p><a href="{% url 'webapp:review_add' product.pk%}" class="btn btn-secondary">Add Review</a></p>
+    </div>
+
+    <div class="review-list">
+        {% for review in product.review_product.all %}
+            <div class="review">
+                <p><b>Author:</b> {{ review.author }} <b>Email:</b> {{ review.author.email }} <b>Mark:</b> {{ review.mark.get_category_display }}</p>
+                <div class="pre">{{ review.text }}</div>
+
+                    <p class="review-links">
+                        <a href="{% url 'webapp:review_update' product.pk %}">Edit</a>
+                        <a href="{% url 'webapp:review_delete' product.pk %}">Delete</a>
+                    </p>
+            </div>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
     </div>
 {% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Review{% endblock %}
+
+{% block content %}
+    <h1>Update Review</h1>
+    <form method="POST" action="">
+        {% include 'partial/form.html' with button_text="Update" %}
+    </form>
+{% endblock %}
